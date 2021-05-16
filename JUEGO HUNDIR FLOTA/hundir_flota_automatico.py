@@ -1,12 +1,12 @@
-import numpy as np
 from random import randint, choice
 from os import system
+import numpy as np
 from copy import deepcopy as dc
 from math import sqrt
 
 if __name__ == '__main__':
 
-    size = 10
+    size = input("¿Cual va a ser el tamaño del tablero? \n Te recomiendo uno de 10x10 \n Ten en cuenta que cuanto más grande, más difícil y largo será el juego \n Introduce un número para el tamaño del cuaadrado: ")
 
     def isint(value):
       try:
@@ -15,20 +15,21 @@ if __name__ == '__main__':
       except ValueError:
         return False
 
+    while not isint(size):
+        size = input('¡Vaya! No es correcto. Tienes que introducir un número entero ')
+    size = int(size)
+    
     level = input('El juego puede ser fácil o difícil. ¿Qué reto quieres? \n Escribe 1 para fácil o 2 para difícil: ')
-
+    while not isint(level):
+        size = input('¡Vaya! No es correcto. Introduce solo 1 para fácil o 2 para difícil: ')
     while int(level) not in range(0, 3):
         level = input('¡Vaya! No es correcto. Introduce solo 1 para fácil o 2 para difícil: ')
     level = int(level) - 1
-
-    def visualizar_tablero_agua():   # MUESTRA el tablero creado con los índices y columnas
-        print('   1 2 3 4 5 6 7 8 9 10')
-        for i in range(len(tablero_agua)):
-            if i < 9:
-                print(str(i+1)+ '  ' + ' '.join(tablero_agua[i]))
-            elif i == 9:
-                print(str(i+1)+ ' ' + ' '.join(tablero_agua[i]))
-
+    
+    while size < 10:
+        print('!Vaya! El tamaño del tablero tiene que ser mínimo de 10!')
+        size = int(input('Inténtalo de nuevo, ¡tú puedes!'))
+    
     def print_board(board):
         print('   1 2 3 4 5 6 7 8 9 10')
         i = 1
@@ -38,80 +39,6 @@ if __name__ == '__main__':
             else:
                 print(str(i) + '  ' + ' '.join(row))
             i += 1
-
-
-    def func_posicion_fila():   # Pregunta por la fila donde se coloca la cabecera del barco
-        global posicion_fila
-        posicion_fila = input('Ingrese la fila donde quiere colocar su barco: (1 - 10)')
-        if int(posicion_fila) < 1 or int(posicion_fila) > 10:
-            print('Esa fila no se encuentra en el tablero. Ingresa una fila entre 1 y 10')
-            func_posicion_fila()
-        else:
-            return posicion_fila
-
-
-    def func_posicion_columna():   # Pregunta por la columna donde se coloca la cabecera del barco
-        global posicion_columna
-        posicion_columna = input('Ingrese la columna donde quiere colocar su barco: (1 - 10)')
-        if int(posicion_columna) < 1 or int(posicion_columna) > 10:
-            print('Esa columna no se encuentra en el tablero. Ingresa una columna entre 1 y 10')
-            func_posicion_columna()
-        else:
-            return posicion_columna
-
-
-    def func_orientacion():   # Pregunta por la posición en la que se coloca el barco (horizontal o vertical)
-        global orientacion
-        orientacion = input('Ingrese la orientación de su barco: ("h" para horizontal - "v" para vertical)')
-        if orientacion == 'h' or orientacion == 'v':
-            return orientacion
-        else:        
-            print('Ingrese una orientación válida ("h" para horizontal - "v" para vertical)')
-            func_orientacion()
-
-    def ubicar_barcos():    # Pregunta qué barco quiero colocar, lo coloca y lo visualiza
-        if len(barcos) > 0:
-            print('\nBarcos disponibles:', barcos)
-        while len(barcos) > 0:
-            try:
-                dimensiones = input('Qué barco desea posicionar? Ingrese la dimensión del barco a colocar: (2 a 5)')
-                if int(dimensiones) in barcos:
-                    func_posicion_fila()
-                    func_posicion_columna()
-                    func_orientacion()
-
-                    if orientacion == 'h':
-                        if np.all(tablero_agua[int(posicion_fila)-1, int(posicion_columna)-1:int(posicion_columna)+int(dimensiones)-1] != '#'):
-                            if int(posicion_columna)+int(dimensiones)-1 > 10:
-                                print('Te has salido del tablero!')
-                                ubicar_barcos()
-                            else:
-                                tablero_agua[int(posicion_fila)-1, int(posicion_columna)-1:int(posicion_columna)+int(dimensiones)-1] = '#'
-                                visualizar_tablero_agua()
-                        else:
-                            print('Ya hay un barco en ese sitio!')
-                            ubicar_barcos()
-                    elif orientacion == 'v':
-                        if np.all(tablero_agua[int(posicion_fila)-1:int(posicion_fila)+int(dimensiones)-1, int(posicion_columna)-1] != '#'):
-                            if int(posicion_fila)+int(dimensiones)-1 > 10:
-                                print('Te has salido del tablero!')
-                                ubicar_barcos()
-                            else:
-                                tablero_agua[int(posicion_fila)-1:int(posicion_fila)+int(dimensiones)-1, int(posicion_columna)-1] = '#'
-                                visualizar_tablero_agua()
-                        else:
-                            print('Ya hay un barco en ese sitio!')
-                            ubicar_barcos()
-                else:
-                    print('No dispones de barcos de dimensión ' + dimensiones)
-                    ubicar_barcos()
-                if len(barcos) > 0:
-                    barcos.remove(int(dimensiones))
-                    print('\nBarcos disponibles:', barcos)
-            except Exception:
-                print ('Ingresa un número válido')
-        print('Ya has colocado todos los barcos!! A JUGAR !!')
-        return tablero_agua
 
     def create_ships(board, ships):
         for ship in range(0, len(ships)):
@@ -157,29 +84,29 @@ if __name__ == '__main__':
         return True
 
     def probability_hunt(board, ships, size, hit):
-            prob = np.zeros((size, size))
-            for ship in ships:
-                verify = []
-                verify.append(['~'] * ship)
-                for row in range(0, len(board[0])):
-                    for k in range(0, len(board[0]) - ship + 1):
-                        if 'O' not in board[row][k:k + ship]:
-                            prob[row, k:k + ship] += 1
-                for col in range(0, len(board[0])):
-                    column = []
-                    for row in range(0, len(board[0])):
-                        column.append(board[row][col])
-                    for j in range(0, len(board[0]) - ship + 1):
-                        if 'O' not in column[j:j + ship]:
-                            prob[j:j + ship, col] += 1
-            prob = np.divide(prob, np.amax(prob))
-            for i in hit:
-                prob[i[0], i[1]] = 0.1
+        prob = np.zeros((size, size))
+        for ship in ships:
+            verify = []
+            verify.append(['O'] * ship)
             for row in range(0, len(board[0])):
-                for i in range(0, len(board[0])):
-                    if board[row][i] == 'X':
-                        prob[row, i] = 0
-            return prob
+                for k in range(0, len(board[0]) - ship + 1):
+                    if 'X' not in board[row][k:k + ship]:
+                        prob[row, k:k + ship] += 1
+            for col in range(0, len(board[0])):
+                column = []
+                for row in range(0, len(board[0])):
+                    column.append(board[row][col])
+                for j in range(0, len(board[0]) - ship + 1):
+                    if 'X' not in column[j:j + ship]:
+                        prob[j:j + ship, col] += 1
+        prob = np.divide(prob, np.amax(prob))
+        for i in hit:
+            prob[i[0], i[1]] = 0.1
+        for row in range(0, len(board[0])):
+            for i in range(0, len(board[0])):
+                if board[row][i] == 'B':
+                    prob[row, i] = 0
+        return prob
 
     def distance(hit, i):
         if hit.index(i) == (len(hit) - 1):
@@ -199,7 +126,7 @@ if __name__ == '__main__':
                     if i[0] == row:
                         for k in range(i[1] - ship + 1, i[1] + 1):
                             if k >= 0:
-                                if 'O' not in board[row][k:k + ship]:
+                                if 'X' not in board[row][k:k + ship]:
                                         if (k + ship) < len(board[0]):
                                             prob[row, k:k + ship] += (1 - 0.1 * (1.5 * distance(hit, i) - hit.index(i)))
             for col in range(0, len(board[0])):
@@ -210,14 +137,14 @@ if __name__ == '__main__':
                             if k >= 0:
                                 for row in range(0, len(board[0])):
                                     column.append(board[row][col])
-                                if 'O' not in column[k:k + ship]:
+                                if 'X' not in column[k:k + ship]:
                                         if (k + ship) < len(board[0]):
                                             prob[k:k + ship, col] += (1 - 0.1 * (1.5 * distance(hit, i) - hit.index(i)))
         for i in hit:
             prob[i[0], i[1]] = 0
         for row in range(0, len(board[0])):
             for i in range(0, len(board[0])):
-                if board[row][i] == 'X':
+                if board[row][i] == 'B':
                     prob[row, i] = 0
         return prob
 
@@ -250,7 +177,7 @@ if __name__ == '__main__':
         if level == 0:
             guess_row = choice(range(0, size))
             guess_col = choice(range(0, size))
-            while board[guess_row][guess_col] != '~':
+            while board[guess_row][guess_col] != 'O':
                 guess_row = choice(range(0, size))
                 guess_col = choice(range(0, size))
             return [guess_row, guess_col]
@@ -270,7 +197,7 @@ if __name__ == '__main__':
             else:
                 guess_row = choice(range(0, size))
                 guess_col = choice(range(0, size))
-                while board[guess_row][guess_col] != '~':
+                while board[guess_row][guess_col] != 'O':
                     guess_row = choice(range(0, size))
                     guess_col = choice(range(0, size))
 
@@ -278,45 +205,43 @@ if __name__ == '__main__':
 
     def check_points(board, size):
         #loop para checkear las celdas del 2º tablero
-        #si alguna celda no tiene '~', retorna False.
+        #si alguna celda no tiene 'o', retorna False.
         for i in range(size):
             for j in range(size):
                 if board[i][j] != 0:
                     return False
         return True
 
-
-
+    board = []
     board_ships = []
     board2_ships = []
     board2 = []
-    board = []
 
     for x in range(size):
-        board2.append(['~'] * size)
+        board.append(["O"] * size)
+
+    for x in range(size):
+        board_ships.append([0] * size)
+
+    for x in range(size):
+        board2.append(["O"] * size)
 
     for x in range(size):
         board2_ships.append([0] * size)
 
-    ships = [5, 4, 4, 3, 3, 3, 2, 2, 2, 2]
-    barcos = [5, 4, 4, 3, 3, 3, 2, 2, 2, 2]
-    
+    ships = [5, 4, 3, 3, 2]
+
+    ships_human = create_ships(board_ships, ships)
     ships_comp = create_ships(board2_ships, ships)
-    
 
     system('cls||clear')
-    print('Hay 10 barcos en cada tablero. \n Uno de 5x1, dos de 4x1, tres de 3x1 y cuatro de 2x1 \n Tu meta es hundir la flota enemiga\'s antes de que él hunda la tuya')
-    print('En cada tablero, "agua" se marca con "O" \n y "tocado" con "X".')
+    print('Hay 5 barcos en cada tablero. \n Uno de 5x1, otro de 2x1, dos de 3x1 y el último de 2x1 \n Tu meta es hundir la flota enemiga\'s antes de que él hunda la tuya')
+    print('En cada tablero, "agua" se marca con X \n y "tocado" con B.')
     input('Pulsa Enter para continuar...')
-    tablero_agua = np.full((10,10), '~')
-    visualizar_tablero_agua()
-    ubicar_barcos()
-    ships_human = ubicar_barcos()
     system('cls||clear')
     print('Hola, Soy The Computer y soy más inteligente que tú, humano. \n ¡Vamos a jugar!. \n Te permitiré empezar.')
     input('Pulsa Enter para continuar...')
     system('cls||clear')
-
     turn = 1
     status = 0
     miss = 0
@@ -344,26 +269,26 @@ if __name__ == '__main__':
 
             if (guess_row < 0 or guess_row > (size - 1)) or (guess_col < 0 or guess_col > (size - 1)):
                 print("Vaya... Eso ni siquiera está dentro del océano.")
-            elif board2[guess_row][guess_col] != '~':
+            elif board2[guess_row][guess_col] != 'O':
                 print("Lo has adivinado...")
             else:
-                    valid = True
+                 valid = True
             input('Pulsa Enter para continuar...')
 
         if ships_comp[guess_row][guess_col] == 1:
             print("¿Cómo osas, humano? ¡Le has dado a uno de mis barcos!")
-            board2[guess_row][guess_col] = 'X'
-            ships_comp[guess_row][guess_col] = 0 # probar si vale == '~'
+            board2[guess_row][guess_col] = "B"
+            ships_comp[guess_row][guess_col] = 0
             print_board(board2)
             input('Pulsa Enter para continuar...')
         else:
             print("Has fallado, ¡idiota!")
-            board2[guess_row][guess_col] = 'O'
+            board2[guess_row][guess_col] = "X"
             print_board(board2)
             input('Pulsa Enter para continuar...')
                     
         print('The Computer observa tu tablero:')
-        print_board(ships_human) # Debería mostrar nuestro tablero # Original: board
+        print_board(board)
 
         comp_guess = computer(level, status, ships)
 
@@ -376,19 +301,19 @@ if __name__ == '__main__':
         guess_col2 = comp_guess[1]
         complete = False
 
-        if ships_human[guess_row2][guess_col2] == '#':
+        if ships_human[guess_row2][guess_col2] == 1:
             print("¡Ajá! ¡Le di a uno de tus barcos!")
-            board[guess_row2][guess_col2] = 'X'  # ships_human por board
-            ships_human[guess_row2][guess_col2] = 0 # probar si vale == '~'
+            board[guess_row2][guess_col2] = 'B'
+            ships_human[guess_row2][guess_col2] = 0
             hit.append([guess_row2, guess_col2])
-            print_board(board) # Debería mostrar nuestro tablero
+            print_board(board)
             status = 1
             miss = 0
             complete = True
         if not complete:
             print("The Computer falló. Simplemente mala suerte...")
-            board[guess_row2][guess_col2] = 'O'
-            print_board(board) # Debería mostrar nuestro tablero
+            board[guess_row2][guess_col2] = "X"
+            print_board(board)
             miss += 1
         points_human = check_points(ships_comp, size)
         points_comp = check_points(ships_human, size)
@@ -414,4 +339,3 @@ if __name__ == '__main__':
             input('Pulsa Enter para continuar...')
 
         turn += 1
-
