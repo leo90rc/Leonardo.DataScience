@@ -1,9 +1,6 @@
-
-
 from utils import call_api, get_quotes, get_places, send_mail, get_dates
 from pretty_html_table import build_table
 from variables import *
-
 
 def main():
     # CALL API
@@ -50,7 +47,6 @@ def main():
               credentials_gmail['mail'],
               subject,
               build_table(all_data, 'blue_light'))
-
 
 if __name__ == "__main__":
     main()

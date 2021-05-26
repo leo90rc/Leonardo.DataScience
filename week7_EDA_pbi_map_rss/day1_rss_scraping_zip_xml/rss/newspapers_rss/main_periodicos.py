@@ -20,13 +20,12 @@ tot_data = {
     'Link Noticia': []
 }
 
-for i in newspapers:
+for i in newspapers.keys():
     url_str = newspapers[i]
     var_url = urlopen(url_str)
     xmldoc = parse(var_url)
 
     for item in xmldoc.iterfind('channel/item'):
-
         if company in item.findtext('title').lower():
             tot_data['Periodico'].append(i)
             tot_data['Empresa'].append(company)
@@ -38,7 +37,5 @@ company_df = pd.DataFrame(tot_data)
 print("company_df.shape:", company_df.shape)
 company_df.to_excel('./company_data.xlsx')
 company_df.to_csv('./company_data.csv')
-df_json = company_df.to_json(orient="columns")
-df_parsed = js.loads(df_json, indent=4)
-company_df.to_json('./company_data.json')
+company_df.to_json("company_data.json")
 print("\n FINISH \n")
