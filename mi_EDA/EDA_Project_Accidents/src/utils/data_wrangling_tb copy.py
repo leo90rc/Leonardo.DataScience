@@ -1,16 +1,39 @@
 import pandas as pd
+import sys
+import os
+print("")
+print('MIIIIIIIIIIIIIIIII sys.path: ', __file__)
+print("")
+dir = os.path.dirname
+sep = os.sep
+folders_path = dir(dir(dir(__file__)))
+sys.path.append(folders_path)
 
-def enlistar_dataframes_gu(porcion_fichero):
+print('MIIIIIIIIIIIIIIIII FOLDER PATH: ', folders_path)
+print('---')
+print(sys.path)
+print('----------------------------------')
+print(str(folders_path) + str(sep) + 'data' + sep + 'ACCIDENTES_GU' + str(sep) + str(2011) + str(sep) + str(2011) + 'porcion_fichero' + str(2011) + '-utf8.csv')
+print('----------------------------------')
+print('---')
+print(os.sep)
+print('---')
+
+def enlistar_dataframes(porcion_fichero):
     ''' El argumento debe ser la porción del fichero correspondiente (str). '''
+    lista_carpetas = []
     lista_df = []
-    for i in range(11,21):
+    for i in range(2011, 2021):
         try:
-            i = pd.read_csv('20'+str(i)+'/20'+str(i)+ porcion_fichero +str(i)+'-utf8.csv')
+            #i = pd.read_csv('20'+str(i)+'/20'+str(i)+ porcion_fichero +str(i)+'-utf8.csv')
+            i = pd.read_csv(str(folders_path) + str(sep) + 'data' + sep + 'ACCIDENTES_GU' + str(sep) + str(i) + str(sep) + str(i) + porcion_fichero + str(i) + '-utf8.csv' )
         except:
             try:
-                i = pd.read_csv('20'+str(i)+'/20'+str(i)+ porcion_fichero +str(i)+'-utf8.csv', sep=';')
+                #i = pd.read_csv('20'+str(i)+'/20'+str(i)+ porcion_fichero +str(i)+'-utf8.csv', sep=';')
+                i = pd.read_csv(str(folders_path) + sep + 'data' + sep + 'ACCIDENTES_GU' + sep + str(i) + sep + str(i) + porcion_fichero + str(i) + '-utf8.csv', sep=';')
             except:
-                i = pd.read_excel('20'+str(i)+'/20'+str(i)+ porcion_fichero +str(i)+'.xlsx')
+                #i = pd.read_excel('20'+str(i)+'/20'+str(i)+ porcion_fichero +str(i)+'.xlsx')
+                i = pd.read_excel(str(folders_path) + sep + 'data' + sep + 'ACCIDENTES_GU' + sep + str(i) + sep + str(i) + porcion_fichero + str(i) + '.xlsx' )
         lista_df.append(i)
     return lista_df
 

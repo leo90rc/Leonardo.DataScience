@@ -1,16 +1,36 @@
 import pandas as pd
+import sys
+import os
 
-def enlistar_dataframes_gu(porcion_fichero):
-    ''' El argumento debe ser la porción del fichero correspondiente (str). '''
+dir = os.path.dirname
+sep = os.sep
+eda_project_path = dir(dir(dir(__file__)))
+sys.path.append(eda_project_path)
+
+
+
+def enlistar_dataframes(porcion_fichero):
+    ''' El argumento debe ser la porción del fichero correspondiente (str). La misma es todo el fragmento del fichero que se encuentra entre los años.
+    Ejemplo: Para el fichero "2016_ACCIDENTS_GU_BCN_2016.csv", se debe ingresar "_ACCIDENTS_GU_BCN_"'''
     lista_df = []
-    for i in range(11,21):
+    if porcion_fichero == '_ACCIDENTS_GU_BCN_':
+        folder = 'ACCIDENTES_GU'
+    elif porcion_fichero == '_ACCIDENTS_CAUSES_GU_BCN_':
+        folder = 'CAUSAS'
+    elif porcion_fichero == '_ACCIDENTS_PERSONES_GU_BCN_':
+        folder = 'PERSONA_INVOLUCRADA'
+    elif porcion_fichero == '_ACCIDENTS_TIPUS_GU_BCN_':
+        folder = 'TIPO'
+    elif porcion_fichero == '_accidents_vehicles_gu_bcn_':
+        folder = 'VEHICULO'
+    for i in range(2011,2021):
         try:
-            i = pd.read_csv('20'+str(i)+'/20'+str(i)+ porcion_fichero +str(i)+'-utf8.csv')
+            i = pd.read_csv(eda_project_path + sep + 'data' + sep + folder + sep + str(i) + sep + str(i) + porcion_fichero + str(i) + '-utf8.csv')
         except:
             try:
-                i = pd.read_csv('20'+str(i)+'/20'+str(i)+ porcion_fichero +str(i)+'-utf8.csv', sep=';')
+                i = pd.read_csv(eda_project_path + sep + 'data' + sep + folder + sep + str(i) + sep + str(i) + porcion_fichero + str(i) +'-utf8.csv', sep=';')
             except:
-                i = pd.read_excel('20'+str(i)+'/20'+str(i)+ porcion_fichero +str(i)+'.xlsx')
+                i = pd.read_excel(eda_project_path + sep + 'data' + sep + folder + sep + str(i) + sep + str(i) + porcion_fichero + str(i) +'.xlsx')
         lista_df.append(i)
     return lista_df
 
