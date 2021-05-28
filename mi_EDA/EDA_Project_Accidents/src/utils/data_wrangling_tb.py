@@ -1,15 +1,15 @@
-import pandas as pd
-import sys
-import os
+import pandas as pd  #LAMETIENFOLDERS_TB
+import sys  #LAMETIENFOLDERS_TB
+import os  #LAMETIENFOLDERS_TB
 
-dir = os.path.dirname
-sep = os.sep
-eda_project_path = dir(dir(dir(__file__)))
-sys.path.append(eda_project_path)
+dir = os.path.dirname   #LAMETIENFOLDERS_TB
+sep = os.sep  #LAMETIENFOLDERS_TB
+eda_project_path = dir(dir(dir(__file__)))  #LAMETIENFOLDERS_TB
+sys.path.append(eda_project_path) #LAMETIENFOLDERS_TB
 
 
 
-def enlistar_dataframes(porcion_fichero):
+def enlistar_dataframes(porcion_fichero):       #LAMETIENFOLDERS_TB
     ''' El argumento debe ser la porción del fichero correspondiente (str). La misma es todo el fragmento del fichero que se encuentra entre los años.
     Ejemplo: Para el fichero "2016_ACCIDENTS_GU_BCN_2016.csv", se debe ingresar "_ACCIDENTS_GU_BCN_"'''
     lista_df = []
@@ -33,6 +33,23 @@ def enlistar_dataframes(porcion_fichero):
                 i = pd.read_excel(eda_project_path + sep + 'data' + sep + folder + sep + str(i) + sep + str(i) + porcion_fichero + str(i) +'.xlsx')
         lista_df.append(i)
     return lista_df
+
+
+
+def datos_por_numero_expediente(lista_dataframes, posicion_dataframe, numero_expediente, nombre_columna_expediente):
+    ''' posición_dataframe (int)
+        numero_expediente (str)
+        nombre_columna_expediente (str) '''
+    return lista_dataframes[posicion_dataframe][lista_dataframes[posicion_dataframe][nombre_columna_expediente] == numero_expediente].unstack()
+
+
+
+def info_df_enlistado(lista_dataframes):
+    for i in range(len(lista_dataframes)):
+        print('Información de dataframe en posición '+ str(i))
+        print('---------------------------------------')
+        print(lista_dataframes[i].info())
+        print('______________________________________________________________________________________________________________________________\n')
 
 
 
@@ -151,12 +168,8 @@ def unificar_lista_dataframe(lista_dataframes):
 
 
 
-def crear_listas_personas():
-    ''' Crea una lista de los valores de los datasets de personas que son de interés para el dataset en cuestión. '''
-    global lista_numero_expediente
-    global lista_persona
-    global lista_edad
-    global lista_sexo
+def crear_df_personas(lista_df_personas):
+    ''' Crea un dataframe de los valores de los datasets de "personas implicadas en accidentes" que son de interés para el caso en cuestión. '''
     lista_numero_expediente = []
     lista_persona = []
     lista_edad = []
@@ -171,4 +184,64 @@ def crear_listas_personas():
                 lista_edad.extend(lista_df_personas[i].iloc[:,pos])
             if 'sexe' in value.lower():
                 lista_sexo.extend(lista_df_personas[i].iloc[:,pos])
-    return lista_numero_expediente, lista_persona, lista_edad, lista_sexo
+    return pd.DataFrame(list(zip(lista_numero_expediente, lista_persona, lista_edad, lista_sexo)), columns= ['NUMERO EXPEDIENTE', 'TIPO PERSONA', 'EDAD', 'SEXO'])
+
+
+
+def crear_df_causas(lista_df_causas):
+    ''' Crea un dataframe de los valores de los datasets de "causas de accidente" que son de interés para el caso en cuestión. '''
+    lista_numero_expediente = []
+    lista_causas = []
+    for i in range(len(lista_df_causas)):
+        for pos, value in enumerate(lista_df_causas[i].columns):
+            if 'expedient' in value.lower():
+                lista_numero_expediente.extend(lista_df_causas[i].iloc[:,pos])
+            if 'causa' in value.lower():
+                lista_causas.extend(lista_df_causas[i].iloc[:,pos])
+    return pd.DataFrame(list(zip(lista_numero_expediente, lista_causas)), columns= ['NUMERO EXPEDIENTE', 'DESCRIPCION CAUSA'])
+
+
+
+def crear_df_tipos(lista_df_tipos):
+    ''' Crea un dataframe de los valores de los datasets de "tipos de accidente" que son de interés para el caso en cuestión. '''
+    lista_numero_expediente = []
+    lista_tipo_accidente = []
+    for i in range(len(lista_df_tipos)):
+        for pos, value in enumerate(lista_df_tipos[i].columns):
+            if 'expedient' in value.lower():
+                lista_numero_expediente.extend(lista_df_tipos[i].iloc[:,pos])
+            if 'accident' in value.lower():
+                lista_tipo_accidente.extend(lista_df_tipos[i].iloc[:,pos])
+    return pd.DataFrame(list(zip(lista_numero_expediente, lista_tipo_accidente)), columns= ['NUMERO EXPEDIENTE', 'TIPO ACCIDENTE'])
+
+
+
+def crear_df_vehiculos(lista_df_vehiculos):
+    ''' Crea un dataframe de los valores de los datasets de "vehículos implicados en accidentes" que son de interés para el caso en cuestión. '''
+    lista_numero_expediente = []
+    lista_tipo_vehiculo = []
+    lista_modelo = []
+    lista_marca = []
+    lista_color = []
+    lista_tipo_carnet = []
+    lista_antiguedad = []
+    lista_causa_peaton = []
+    for i in range(len(lista_df_vehiculos)):
+        for pos, value in enumerate(lista_df_vehiculos[i].columns):
+            if 'expedient' in value.lower():
+                lista_numero_expediente.extend(lista_df_vehiculos[i].iloc[:,pos])
+            if ('tipus' in value.lower()) and ('vehicle' in value.lower()):
+                lista_tipo_vehiculo.extend(lista_df_vehiculos[i].iloc[:,pos])
+            if 'model' in value.lower():
+                lista_modelo.extend(lista_df_vehiculos[i].iloc[:,pos])
+            if 'marca' in value.lower():
+                lista_marca.extend(lista_df_vehiculos[i].iloc[:,pos])
+            if 'color' in value.lower():
+                lista_color.extend(lista_df_vehiculos[i].iloc[:,pos])
+            if ('descripció carnet' in value.lower()) or ('descripcio_carnet' in value.lower()):
+                lista_tipo_carnet.extend(lista_df_vehiculos[i].iloc[:,pos])
+            if 'antiguitat' in value.lower():
+                lista_antiguedad.extend(lista_df_vehiculos[i].iloc[:,pos])
+            if 'vianant' in value.lower():
+                lista_causa_peaton.extend(lista_df_vehiculos[i].iloc[:,pos])
+    return pd.DataFrame(list(zip(lista_numero_expediente, lista_tipo_vehiculo, lista_modelo, lista_marca, lista_color, lista_tipo_carnet, lista_antiguedad, lista_causa_peaton)), columns= ['NUMERO EXPEDIENTE', 'TIPO VEHICULO', 'MODELO VEHICULO', 'MARCA VEHICULO', 'COLOR VEHICULO', 'TIPO CARNET', 'ANTIGUEDAD CARNET', 'CAUSA PEATON'])
