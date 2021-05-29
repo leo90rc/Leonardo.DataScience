@@ -217,23 +217,74 @@ def crear_df_vehiculos(lista_df_vehiculos):
 
 
 
-#if __name__ == '__main__':
-dir = os.path.dirname
-sep = os.sep
-eda_project_path = dir(dir(dir(__file__)))
-sys.path.append(eda_project_path)
+def crear_df_gu(lista_df_gu):
+    ''' Crea un dataframe de los datos recopilados que son de interés para el estudio en cuestión. '''
+    lista_numero_expediente = []
+    lista_distrito = []
+    lista_barrio = []
+    lista_calle = []
+    lista_dia_semana = []
+    lista_ano = []
+    lista_mes = []
+    lista_dia = []
+    lista_hora = []
+    lista_turno = []
+    lista_victimas = []
+    lista_leves = []
+    lista_graves = []
+    lista_muertos = []
+    for i in range(len(lista_df_gu)):
+        for pos, value in enumerate(lista_df_gu[i].columns):
+            if 'expedient' in value.lower():
+                lista_numero_expediente.extend(lista_df_gu[i].iloc[:,pos])
+            if ('nom' in value.lower()) and ('districte' in value.lower()):
+                lista_distrito.extend(lista_df_gu[i].iloc[:,pos])
+            if ('nom' in value.lower()) and ('barri' in value.lower()):
+                lista_barrio.extend(lista_df_gu[i].iloc[:,pos])
+            if ('nom' in value.lower()) and ('carrer' in value.lower()):
+                lista_calle.extend(lista_df_gu[i].iloc[:,pos])
+            if (('descripció' in value.lower()) or ('descripcio' in value.lower())) and ('setmana' in value.lower()):
+                lista_dia_semana.extend(lista_df_gu[i].iloc[:,pos])
+            if ('any' in value.lower()) and ('mes' not in value.lower()):
+                lista_ano.extend(lista_df_gu[i].iloc[:,pos])
+            if ('mes' in value.lower()) and ('nom' in value.lower()):
+                lista_mes.extend(lista_df_gu[i].iloc[:,pos])
+            if ('mes' in value.lower()) and ('dia' in value.lower()):
+                lista_dia.extend(lista_df_gu[i].iloc[:,pos])
+            if ('hora' in value.lower()) and ('dia' in value.lower()):
+                lista_hora.extend(lista_df_gu[i].iloc[:,pos])
+            if 'torn' in value.lower():
+                lista_turno.extend(lista_df_gu[i].iloc[:,pos])
+            if ('víctimes' in value.lower()) or ('victimes' in value.lower()):
+                lista_victimas.extend(lista_df_gu[i].iloc[:,pos])
+            if 'lleus' in value.lower():
+                lista_leves.extend(lista_df_gu[i].iloc[:,pos])
+            if 'greus' in value.lower():
+                lista_graves.extend(lista_df_gu[i].iloc[:,pos])
+            if 'morts' in value.lower():
+                lista_muertos.extend(lista_df_gu[i].iloc[:,pos])
+    return pd.DataFrame(list(zip(lista_numero_expediente, lista_distrito, lista_barrio, lista_calle, lista_dia_semana,
+    lista_ano, lista_mes, lista_dia, lista_hora, lista_turno, lista_victimas, lista_leves, lista_graves, lista_muertos)),
+    columns= ['NUMERO_EXPEDIENTE', 'DISTRITO', 'BARRIO', 'CALLE', 'DIA_SEMANA', 'ANO', 'MES', 'DIA', 'HORA', 'TURNO', 'NUMERO_VICTIMAS',
+    'VICTIMAS_LEVES', 'VICTIMAS_GRAVES', 'VICTIMAS_FALLECIDAS'])
 
-def leer_csv_post_wrangling():#nombre_gu = 'df_gu', nombre_causas = 'df_causas', nombre_personas = 'df_personas', nombre_vehiculos = 'df_vehiculos', nombre_tipos = 'df_tipos'):
-    '''El orden de lectura de los ficheros .csv es el siguiente: accidentes_gu.csv, accidentes_causas.csv, accidentes_personas.csv, accidentes_vehiculos.csv, accidentes_tipos.csv.
-       Se debe tener en cuenta a la hora de nombrar los dataframes.'''
-    global nombre_gu
-    global nombre_causas
-    global nombre_personas
-    global nombre_vehiculos
-    global nombre_tipos
-    nombre_gu = pd.read_csv(eda_project_path + sep + 'data' + sep + 'DATA_POST_WRANGLING' + sep + 'accidentes_gu.csv')
-    nombre_causas = pd.read_csv(eda_project_path + sep + 'data' + sep + 'DATA_POST_WRANGLING' + sep + 'accidentes_causas.csv')
-    nombre_personas = pd.read_csv(eda_project_path + sep + 'data' + sep + 'DATA_POST_WRANGLING' + sep + 'accidentes_personas.csv')
-    nombre_vehiculos = pd.read_csv(eda_project_path + sep + 'data' + sep + 'DATA_POST_WRANGLING' + sep + 'accidentes_vehiculos.csv')
-    nombre_tipos = pd.read_csv(eda_project_path + sep + 'data' + sep + 'DATA_POST_WRANGLING' + sep + 'accidentes_tipos.csv')
-    return nombre_gu, nombre_causas, nombre_personas, nombre_vehiculos, nombre_tipos
+
+
+
+#if __name__ == '__main__':
+
+
+
+def quitar_espacios(df):
+    for columna in df.columns:
+        try:
+            df[columna] = df[columna].str.strip()
+        except:
+            pass
+
+
+
+def translate(df):
+    lista_castellano = ['Mañana', 'Tarde', 'Noche', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
+    lista_catalan = ['Matí', 'Tarda', 'Nit', 'Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre', 'Dilluns', 'Dimarts', 'Dimecres', 'Dijous', 'Divendres', 'Dissabte', 'Diumenge']
+    df.replace(lista_catalan, lista_castellano, inplace = True)
