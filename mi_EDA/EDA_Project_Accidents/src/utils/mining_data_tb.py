@@ -265,8 +265,8 @@ def crear_df_gu(lista_df_gu):
                 lista_muertos.extend(lista_df_gu[i].iloc[:,pos])
     return pd.DataFrame(list(zip(lista_numero_expediente, lista_distrito, lista_barrio, lista_calle, lista_dia_semana,
     lista_ano, lista_mes, lista_dia, lista_hora, lista_turno, lista_victimas, lista_leves, lista_graves, lista_muertos)),
-    columns= ['NUMERO_EXPEDIENTE', 'DISTRITO', 'BARRIO', 'CALLE', 'DIA_SEMANA', 'ANO', 'MES', 'DIA', 'HORA', 'TURNO', 'NUMERO_VICTIMAS',
-    'VICTIMAS_LEVES', 'VICTIMAS_GRAVES', 'VICTIMAS_FALLECIDAS'])
+    columns= ['NUMERO EXPEDIENTE', 'DISTRITO', 'BARRIO', 'CALLE', 'DIA SEMANA', 'ANO', 'MES', 'DIA', 'HORA', 'TURNO', 'NUMERO VICTIMAS',
+    'VICTIMAS LEVES', 'VICTIMAS GRAVES', 'VICTIMAS FALLECIDAS'])
 
 
 
