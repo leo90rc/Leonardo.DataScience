@@ -3,77 +3,79 @@
 
 # VER EN PDF DE PROYECTO
 
+import argparse
 from flask import Flask, request, render_template
-#from utils.apis_tb import read_json
-import sys
 import os
+import sys
+import json
 
 dir = os.path.dirname
 sep = os.sep
-api_path = dir(dir(__file__))
-sys.path.append(api_path)
-print('--')
-print(api_path)
-print('--')
-from utils.apis_tb import read_json
+eda_project_path = dir(dir(dir(__file__)))
+sys.path.append(eda_project_path)
 
 
-app = Flask(__name__)
+from src.utils.apis_tb import read_json
+from src.utils.apis_tb import csv_to_json
+# Mandatory
+parser = argparse.ArgumentParser()
+parser.add_argument("-x", "--x", type=int, help="the base")
+#parser.add_argument("-y", "--y", type=int, help="the exponent", required=True)
+#parser.add_argument("-v", "--v", default=0, type=int, help="the result will be multiplied by 'v'")
+args = vars(parser.parse_args())
 
-@app.route("/")  # @ --> esto representa el decorador de la función
-def home():
-    """ Default path """
-    return app.send_static_file('greet.html')
+if args['x'] == 8642:
+
+    app = Flask(__name__)  # name --> main
+
+    # ---------- Flask functions ----------
+
+    # localhost:6060/give_me_id?password=12345
+    @app.route('/')
+    def ingreso():
+        return 'Para obtener el json del dataframe debe acceder al endpoint "/obtener_json" pasando por parámetro la contraseña correcta.\n\
+            Inserte en la URL: localhost:6060/obtener_json?password="INSERTAR_CONTRASEÑA"'
+
+    @app.route('/obtener_json', methods=['GET'])
+    def obtener_json():
+        x = request.args['password']
+        if x == "Y6571256D":
+            ubicacion_accidentes = eda_project_path + sep + 'data' + sep + 'DATA_POST_CLEANING' + sep + 'accidentes.csv'
+            return csv_to_json(path_fichero = ubicacion_accidentes)
+        else:
+            return "La contraseña es incorrecta."
 
 
-@app.route("/greet")
-def greet():
-    username = request.args.get('name')
-    return render_template('index.html', name=username)
 
-@app.route("/info")
-def create_json():
-    return 'Tienes que acceder al endpoint "/give_me_id" pasando por parámetro "password" con la contraseña correcta' 
+    # ---------- Other functions ----------
 
-# localhost:6060/give_me_id?password=12345
-@app.route('/give_me_id', methods=['GET'])
-def give_id():
-    x = request.args['password']
-    if x == "12345":
-        return request.args
-    else:
-        return "No es la contraseña correcta"
+    def main():
+        print("---------STARTING PROCESS---------")
+        print(__file__)
 
-@app.route("/recibe_informacion")
-def recibe_info():
-    pass 
+        # Get the settings fullpath
+        # \ --> WINDOWS
+        # / --> UNIX
+        # Para ambos: os.sep
+        settings_file = os.path.dirname(__file__) + os.sep + "settings.json"
+        print(settings_file)
+        # Load json from file
+        json_readed = read_json(fullpath=settings_file)
 
-# ---------- Other functions ----------
+        # Load variables from jsons
+        SERVER_RUNNING = json_readed["server_running"]
+        print("SERVER_RUNNING", SERVER_RUNNING)
+        if SERVER_RUNNING:
+            DEBUG = json_readed["debug"]
+            HOST = json_readed["host"]
+            PORT_NUM = json_readed["port"]
+            app.run(debug=DEBUG, host=HOST, port=PORT_NUM)
+        else:
+            print("Server settings.json doesn't allow to start server. " + 
+                "Please, allow it to run it.")
 
-def main():
-    print("---------STARTING PROCESS---------")
-    print(__file__)
-    
-    # Get the settings fullpath
-    # \\ --> WINDOWS
-    # / --> UNIX
-    # Para ambos: os.sep
-    settings_file = os.path.dirname(__file__) + os.sep + "settings.json"
-    print(settings_file)
-    # Load json from file
-    json_readed = read_json(fullpath=settings_file)
-    
-    # Load variables from jsons
-    SERVER_RUNNING = json_readed["server_running"]
-    print("SERVER_RUNNING", SERVER_RUNNING)
-    if SERVER_RUNNING:
-        DEBUG = json_readed["debug"]
-        HOST = json_readed["host"]
-        PORT_NUM = json_readed["port"]
-        app.run(debug=DEBUG, host=HOST, port=PORT_NUM)
-    else:
-        print("Server settings.json doesn't allow to start server. " + 
-            "Please, allow it to run it.")
+    if __name__ == "__main__":
+        main()
 
-if __name__ == "__main__":
-    main()
+else:
+    print('Wrong password')
