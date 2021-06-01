@@ -1,0 +1,11 @@
+{
+    "project_name": "El tráfico de Barcelona",
+    "author": "Leonardo Frazzetto",
+    "linkedin": "https://www.linkedin.com/in/leonardo-frazzetto/",
+    "e_mail": "leonardo.frazzetto1990@gmail.com",
+    "project_title": "Accidentes registrados por la Guardia Urbana de Barcelona",
+    "project_description": "La ciudad de Barcelona se ubica entre uno de los destinos predilectos a la hora de hacer turismo en España. Sumado a esto, suele tratarse además de uno de los sitios preferidos a la hora de emigrar, influyendo en esta decisión factores como ser el idioma, la ubicación geográfica, la cultura y la facilidad a la hora de insertarse en la sociedad, entre otros.\n A pesar de contar con medios de transporte públicos muy efectivos a la hora de liberar las calles del caudal de personas que se desplazan de un lado a otro (metros, ferrocarriles, teleféricos, entre otros), es cierto que muchos continúan eligiendo su transporte personal a la hora de transitar por la ciudad.\nDurante todo el año, pero principalmente en los meses en los que el clima más acompaña, Barcelona recibe un abultado número de turistas que se aprovechan de su geografía para difrutar de unas vacaciones inolvidables. De esta manera, al llegar los meses de temporada alta, se puede notar que el volumen de personas aumenta por encima de lo habitual en las zonas mayor atractivo turístico.\nSe intenta evaluar qué influencia tiene esta muchedumbre en la cantidad de accidentes de tráfico que se registran en la ciudad, teniendo en cuenta que, a la hora de trasladarse, los turistas tienen, entre las tantas opciones, la posibilidad de elegir transportes personales para movilizarse, como ser vehículos, ciclomotores o bicicletas de alquiler, sin descartar que los peatones también son una fuente generadora de siniestros.\nPara realizar foco sobre un objeto de estudio, se plantea la siguiente hipótesis:\nDurante la temporada alta (Julio, Agosto y Septiembre), se registran mayor cantidad de accidentes de tráfico en las zonas más turísticamente concurridas de la ciudad de Barcelona.",
+    "flask_port": 6060,
+    "streamlit_port": 8051,
+    "python_libraries_used": ["pandas", "os", "sys", "seaborn", "matplotlib.pyplot", "numpy", "streamlit", "PIL", "argparse", "json", "flask"]
+}

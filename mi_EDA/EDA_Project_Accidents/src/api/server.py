@@ -1,8 +1,6 @@
 # Contains the functionality that starts the Flask API. This file only will be executed if it is passed an argument “-x 8642”, 
 # otherwise will show “wrong password”. In the API there is, at least, this GET functions.
 
-# VER EN PDF DE PROYECTO
-
 import argparse
 from flask import Flask, request, render_template
 import os
@@ -19,9 +17,8 @@ from src.utils.apis_tb import read_json
 from src.utils.apis_tb import csv_to_json
 # Mandatory
 parser = argparse.ArgumentParser()
-parser.add_argument("-x", "--x", type=int, help="the base")
-#parser.add_argument("-y", "--y", type=int, help="the exponent", required=True)
-#parser.add_argument("-v", "--v", default=0, type=int, help="the result will be multiplied by 'v'")
+parser.add_argument("-x", "--x", type=int)
+
 args = vars(parser.parse_args())
 
 if args['x'] == 8642:
@@ -34,12 +31,13 @@ if args['x'] == 8642:
     @app.route('/')
     def ingreso():
         return 'Para obtener el json del dataframe debe acceder al endpoint "/obtener_json" pasando por parámetro la contraseña correcta.\n\
-            Inserte en la URL: localhost:6060/obtener_json?password="INSERTAR_CONTRASEÑA"'
+            Inserte en la URL: localhost:6060/obtener_json?token_id="INSERTAR_CONTRASEÑA"'
 
     @app.route('/obtener_json', methods=['GET'])
     def obtener_json():
-        x = request.args['password']
-        if x == "Y6571256D":
+        x = request.args['token_id']
+        S = "Y6571256D"
+        if x == S:
             ubicacion_accidentes = eda_project_path + sep + 'data' + sep + 'DATA_POST_CLEANING' + sep + 'accidentes.csv'
             return csv_to_json(path_fichero = ubicacion_accidentes)
         else:

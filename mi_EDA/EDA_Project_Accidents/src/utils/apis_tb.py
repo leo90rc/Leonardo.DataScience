@@ -18,5 +18,6 @@ def read_json(fullpath):
 
 def csv_to_json(path_fichero):
     dataframe_accidentes = pd.read_csv(eda_project_path + sep + 'data' + sep + 'DATA_POST_CLEANING' + sep + 'accidentes.csv')
+    dataframe_accidentes = dataframe_accidentes.head(5000)
     json_accidentes = dataframe_accidentes.to_json(indent = 4)
     return json_accidentes
