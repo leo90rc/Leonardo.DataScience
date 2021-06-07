@@ -1,6 +1,3 @@
-# Contains the functionality that starts the Flask API. This file only will be executed if it is passed an argument “-x 8642”, 
-# otherwise will show “wrong password”. In the API there is, at least, this GET functions.
-
 import argparse
 from flask import Flask, request, render_template
 import os
@@ -13,21 +10,21 @@ eda_project_path = dir(dir(dir(__file__)))
 sys.path.append(eda_project_path)
 
 
-from src.utils.apis_tb import read_json
-from src.utils.apis_tb import csv_to_json
-# Mandatory
+from src.utils.folders_tb import read_json
+from src.utils.folders_tb import csv_to_json
+
 parser = argparse.ArgumentParser()
 parser.add_argument("-x", "--x", type=int)
 
 args = vars(parser.parse_args())
 
-if args['x'] == 8642:
+settings_file = os.path.dirname(__file__) + sep + "settings.json"
+json_readed = read_json(fullpath=settings_file)
 
-    app = Flask(__name__)  # name --> main
+if args['x'] == json_readed["argparse"]:
 
-    # ---------- Flask functions ----------
+    app = Flask(__name__)
 
-    # localhost:6060/give_me_id?password=12345
     @app.route('/')
     def ingreso():
         return 'Para obtener el json del dataframe debe acceder al endpoint "/obtener_json" pasando por parámetro la contraseña correcta.\n\
@@ -36,7 +33,7 @@ if args['x'] == 8642:
     @app.route('/obtener_json', methods=['GET'])
     def obtener_json():
         x = request.args['token_id']
-        S = "Y6571256D"
+        S = json_readed["token_id"]
         if x == S:
             ubicacion_accidentes = eda_project_path + sep + 'data' + sep + 'DATA_POST_CLEANING' + sep + 'accidentes.csv'
             return csv_to_json(path_fichero = ubicacion_accidentes)
@@ -44,23 +41,9 @@ if args['x'] == 8642:
             return "La contraseña es incorrecta."
 
 
-
-    # ---------- Other functions ----------
-
     def main():
         print("---------STARTING PROCESS---------")
-        print(__file__)
 
-        # Get the settings fullpath
-        # \ --> WINDOWS
-        # / --> UNIX
-        # Para ambos: os.sep
-        settings_file = os.path.dirname(__file__) + os.sep + "settings.json"
-        print(settings_file)
-        # Load json from file
-        json_readed = read_json(fullpath=settings_file)
-
-        # Load variables from jsons
         SERVER_RUNNING = json_readed["server_running"]
         print("SERVER_RUNNING", SERVER_RUNNING)
         if SERVER_RUNNING:

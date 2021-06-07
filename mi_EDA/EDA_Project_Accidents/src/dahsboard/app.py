@@ -1,9 +1,6 @@
-# Correrá un dashboard streamlit utilizando el comando necesario.
-
-# -*- coding: utf-8 -*-
 import os
 import sys
-dir = os.path.dirname   #LAMETIENFOLDERS_TB
+dir = os.path.dirname
 sep = os.sep
 eda_project_path = dir(dir(dir(__file__)))
 sys.path.append(eda_project_path)
@@ -20,17 +17,27 @@ menu = st.sidebar.selectbox('Menu:', options=["Bienvenida", "Accidentes en cada 
 
 
 if menu == 'Bienvenida':
-    st.title('Accidentes registrados por la Guardia Urbana de Barcelona')
-    st.write('En esta web encontrarás todos los accidentes de tráfico que han sido registrados\
-            en la ciudad de Barcelona entre los años 2010 y 2020. Además puedes obtener el json\
-            del dataframe completo si así lo deseas. ')
+    st.title('Tráfico y turistas: ¿Un cóctel explosivo?')
+    st.write('')
+    st.write('La ciudad de Barcelona se ubica entre uno de los destinos predilectos a la hora de hacer turismo en España. Sumado a esto, suele tratarse además de uno de los sitios preferidos a la hora de emigrar, influyendo en esta decisión factores como ser el idioma, la ubicación geográfica, la cultura y la facilidad a la hora de insertarse en la sociedad, entre otros.')
+    st.write('')
+    st.write('A pesar de contar con medios de transporte públicos muy efectivos (metros, ferrocarriles, teleféricos, entre otros) que luchan por apaciguar el gran caudal de personas que se desplazan de un lado a otro, es cierto que muchos continúan eligiendo su transporte personal para transitar por la ciudad.')
+    st.write('')
+    st.write('A lo largo del año, pero principalmente en los meses en los que el clima más acompaña, Barcelona recibe un abultado número de turistas que se aprovechan de su geografía para disfrutar de unas vacaciones inolvidables. De esta manera, al llegar los meses de temporada alta, se puede notar que el volumen de personas aumenta por encima de lo habitual en las zonas mayor atractivo turístico.')
+    st.write('')
+    st.write('Se intenta evaluar qué influencia tiene esta muchedumbre en la cantidad de accidentes de tráfico que se registran en la ciudad, teniendo en cuenta que, al momento de trasladarse, los turistas tienen, entre las tantas opciones, la posibilidad de elegir transportes particulares para movilizarse, como ser vehículos, ciclomotores o bicicletas de alquiler, sin descartar que los peatones también son una fuente generadora de siniestros, más aun si desconocen la ciudad.')
+    st.write('')
+    st.write('Para realizar foco sobre un objeto de estudio, se plantea la siguiente hipótesis:')
+    st.write('')
+    st.markdown('**Durante los meses de temporada alta (Julio, Agosto y Septiembre), se registran mayor cantidad de accidentes de tráfico en las zonas más turísticamente concurridas de la ciudad de Barcelona.**')
+
 
 
 
 if menu == "Accidentes en cada barrio":
 
-    st.title('Accidentes de tráfico en los barrios más turísticos')
-    st.write('En la siguiente sección se presentan, evaluados por cada mes, los accidentes de tráfico registados por la Guardia Urbana de la ciudad de Barcelona, para los barrios de mayorr concurrencia de turistas en los meses de temporada alta.')
+    st.title('Accidentes de tráfico registrados por la Guardia Urbana de la ciudad de Barcelona en sus barrios más turísticos')
+    st.write('En la siguiente sección se presentan, evaluados por cada mes, los accidentes de tráfico registados por la Guardia Urbana de la ciudad de Barcelona, para los barrios de mayor concurrencia de turistas en los meses de temporada alta.')
     menu_barrios = st.selectbox('Barrios:', options=['Seleccione un barrio', 'El Barri Gòtic', 'La Barceloneta', 'El Poble Sec', 'El Poblenou',
 'Sant Pere, Santa Caterina i la Ribera', 'La Sagrada Família',
 'La Nova Esquerra de l\'Eixample', 'El Fort Pienc', "L'Antiga Esquerra de l'Eixample",

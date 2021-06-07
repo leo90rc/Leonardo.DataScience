@@ -1,24 +1,6 @@
-#  Contains the generic functionality related to collect data, clean data and others (wrangling methods such us working with multiples jsons).
-
 import pandas as pd
 import sys
 import os
-
-
-def datos_por_numero_expediente(lista_dataframes, posicion_dataframe, numero_expediente, nombre_columna_expediente):
-    ''' posición_dataframe (int)
-        numero_expediente (str)
-        nombre_columna_expediente (str) '''
-    return lista_dataframes[posicion_dataframe][lista_dataframes[posicion_dataframe][nombre_columna_expediente] == numero_expediente].unstack()
-
-
-
-def info_df_enlistado(lista_dataframes):
-    for i in range(len(lista_dataframes)):
-        print('Información de dataframe en posición '+ str(i))
-        print('---------------------------------------')
-        print(lista_dataframes[i].info())
-        print('______________________________________________________________________________________________________________________________\n')
 
 
 
@@ -59,17 +41,6 @@ def comparar_columnas(lista_dataframes):
 
 
 
-def mostrar_columnas(lista_dataframes):
-    ''' SE DEBE INGRESAR UNA LISTA DE DATAFRAMES '''
-    for i in range(len(lista_dataframes)):
-        print('Columnas de dataframe en posición ' + str(i) + ':')
-        print('------------------------------------')
-        print(lista_dataframes[i].columns)
-        print('\nNúmero de columnas: ' + str(len(lista_dataframes[i].columns)) + '\n')
-        print('===========================================================================================')
-
-
-
 def nombre_cada_columna(lista_dataframes):
     tamanio_columnas = []
     for df in lista_dataframes:
@@ -83,137 +54,6 @@ def nombre_cada_columna(lista_dataframes):
             except:
                 print('DF en posición ' + str (j) + ': No contiene columnas en la posición ' + str(i))
         print('\n-------------------------------------\n')
-
-
-
-def ver_ultimas_columnas(lista_dataframes):
-    tamanio_columnas = []
-    for df in lista_dataframes:
-        tamanio_columnas.append(len(df.columns))
-        a = max(tamanio_columnas)
-    for i in range(len(lista_dataframes)):
-        if len(lista_dataframes[i].columns) == (a-2):
-            print('Posición del DF ' + str(i) + ': '+ str(list(lista_dataframes[i].columns[-2::])))
-        elif len(lista_dataframes[i].columns) == a:
-            print('Posición del DF ' + str(i) + ': ' + str(list(lista_dataframes[i].columns[-4::])))
-
-
-
-def eliminar_columnas_finales(lista_dataframes):
-    tamanio_columnas = []
-    for df in lista_dataframes:
-        tamanio_columnas.append(len(df.columns))
-        a = max(tamanio_columnas)
-    for i in range(len(lista_dataframes)):
-        if len(lista_dataframes[i].columns) == a:
-            lista_dataframes[i] = lista_dataframes[i].iloc[:,:(a-2)]
-
-
-
-def ordenar_columnas_finales(lista_dataframes):
-    tamanio_columnas = []
-    for df in lista_dataframes:
-        tamanio_columnas.append(len(df.columns))
-        a = max(tamanio_columnas)
-    for i in range(len(lista_dataframes)):
-        if (lista_dataframes[i].columns[-1] == 'Coordenada UTM (X)') or (lista_dataframes[i].columns[-1] == 'Coordenada_UTM_X'):
-            col = lista_dataframes[i].columns.to_list()
-            col2 = col[0:(a-2)] + col[-1:] + col[-2:-1]
-            lista_dataframes[i] = lista_dataframes[i][col2]
-
-
-
-def renombrar_columnas(lista_dataframes, lista_nombres):
-    for i in range(len(lista_dataframes)):
-        lista_dataframes[i].columns = lista_nombres
-
-
-
-def unificar_lista_dataframe(lista_dataframes):
-    df_concatenados = pd.DataFrame()
-    for i in range(1, len(lista_dataframes)):
-        df_concatenados = df_concatenados.append(lista_dataframes[i], ignore_index = True)
-    return df_concatenados
-
-
-
-def crear_df_personas(lista_df_personas):
-    ''' Crea un dataframe de los valores de los datasets de "personas implicadas en accidentes" que son de interés para el caso en cuestión. '''
-    lista_numero_expediente = []
-    lista_persona = []
-    lista_edad = []
-    lista_sexo = []
-    for i in range(len(lista_df_personas)):
-        for pos, value in enumerate(lista_df_personas[i].columns):
-            if 'expedient' in value.lower():
-                lista_numero_expediente.extend(lista_df_personas[i].iloc[:,pos])
-            if 'persona' in value.lower():
-                lista_persona.extend(lista_df_personas[i].iloc[:,pos])
-            if 'edat' in value.lower():
-                lista_edad.extend(lista_df_personas[i].iloc[:,pos])
-            if 'sexe' in value.lower():
-                lista_sexo.extend(lista_df_personas[i].iloc[:,pos])
-    return pd.DataFrame(list(zip(lista_numero_expediente, lista_persona, lista_edad, lista_sexo)), columns= ['NUMERO EXPEDIENTE', 'TIPO PERSONA', 'EDAD', 'SEXO'])
-
-
-
-def crear_df_causas(lista_df_causas):
-    ''' Crea un dataframe de los valores de los datasets de "causas de accidente" que son de interés para el caso en cuestión. '''
-    lista_numero_expediente = []
-    lista_causas = []
-    for i in range(len(lista_df_causas)):
-        for pos, value in enumerate(lista_df_causas[i].columns):
-            if 'expedient' in value.lower():
-                lista_numero_expediente.extend(lista_df_causas[i].iloc[:,pos])
-            if 'causa' in value.lower():
-                lista_causas.extend(lista_df_causas[i].iloc[:,pos])
-    return pd.DataFrame(list(zip(lista_numero_expediente, lista_causas)), columns= ['NUMERO EXPEDIENTE', 'DESCRIPCION CAUSA'])
-
-
-
-def crear_df_tipos(lista_df_tipos):
-    ''' Crea un dataframe de los valores de los datasets de "tipos de accidente" que son de interés para el caso en cuestión. '''
-    lista_numero_expediente = []
-    lista_tipo_accidente = []
-    for i in range(len(lista_df_tipos)):
-        for pos, value in enumerate(lista_df_tipos[i].columns):
-            if 'expedient' in value.lower():
-                lista_numero_expediente.extend(lista_df_tipos[i].iloc[:,pos])
-            if 'accident' in value.lower():
-                lista_tipo_accidente.extend(lista_df_tipos[i].iloc[:,pos])
-    return pd.DataFrame(list(zip(lista_numero_expediente, lista_tipo_accidente)), columns= ['NUMERO EXPEDIENTE', 'TIPO ACCIDENTE'])
-
-
-
-def crear_df_vehiculos(lista_df_vehiculos):
-    ''' Crea un dataframe de los valores de los datasets de "vehículos implicados en accidentes" que son de interés para el caso en cuestión. '''
-    lista_numero_expediente = []
-    lista_tipo_vehiculo = []
-    lista_modelo = []
-    lista_marca = []
-    lista_color = []
-    lista_tipo_carnet = []
-    lista_antiguedad = []
-    lista_causa_peaton = []
-    for i in range(len(lista_df_vehiculos)):
-        for pos, value in enumerate(lista_df_vehiculos[i].columns):
-            if 'expedient' in value.lower():
-                lista_numero_expediente.extend(lista_df_vehiculos[i].iloc[:,pos])
-            if ('tipus' in value.lower()) and ('vehicle' in value.lower()):
-                lista_tipo_vehiculo.extend(lista_df_vehiculos[i].iloc[:,pos])
-            if 'model' in value.lower():
-                lista_modelo.extend(lista_df_vehiculos[i].iloc[:,pos])
-            if 'marca' in value.lower():
-                lista_marca.extend(lista_df_vehiculos[i].iloc[:,pos])
-            if 'color' in value.lower():
-                lista_color.extend(lista_df_vehiculos[i].iloc[:,pos])
-            if ('descripció carnet' in value.lower()) or ('descripcio_carnet' in value.lower()):
-                lista_tipo_carnet.extend(lista_df_vehiculos[i].iloc[:,pos])
-            if 'antiguitat' in value.lower():
-                lista_antiguedad.extend(lista_df_vehiculos[i].iloc[:,pos])
-            if 'vianant' in value.lower():
-                lista_causa_peaton.extend(lista_df_vehiculos[i].iloc[:,pos])
-    return pd.DataFrame(list(zip(lista_numero_expediente, lista_tipo_vehiculo, lista_modelo, lista_marca, lista_color, lista_tipo_carnet, lista_antiguedad, lista_causa_peaton)), columns= ['NUMERO EXPEDIENTE', 'TIPO VEHICULO', 'MODELO VEHICULO', 'MARCA VEHICULO', 'COLOR VEHICULO', 'TIPO CARNET', 'ANTIGUEDAD CARNET', 'CAUSA PEATON'])
 
 
 
@@ -270,12 +110,8 @@ def crear_df_gu(lista_df_gu):
 
 
 
-
-#if __name__ == '__main__':
-
-
-
 def quitar_espacios(df):
+    '''Quita los espacios en blanco al inicio y final de los valores tipo string que contenga el dataframe que se pasa por argunto.'''
     for columna in df.columns:
         try:
             df[columna] = df[columna].str.strip()
@@ -285,6 +121,7 @@ def quitar_espacios(df):
 
 
 def translate(df):
+    '''Traduce del catalán al castellano los valores tipo string referidos a "día", "mes" y "turno" que contenga el dataframe que se pasa por argumento.'''
     lista_castellano = ['Mañana', 'Tarde', 'Noche', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']
     lista_catalan = ['Matí', 'Tarda', 'Nit', 'Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny', 'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre', 'Dilluns', 'Dimarts', 'Dimecres', 'Dijous', 'Divendres', 'Dissabte', 'Diumenge']
     df.replace(lista_catalan, lista_castellano, inplace = True)
