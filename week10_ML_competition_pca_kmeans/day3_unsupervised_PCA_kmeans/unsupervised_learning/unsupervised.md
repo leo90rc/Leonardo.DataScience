@@ -8,6 +8,9 @@
 2. Mini intro No supervised:
     - https://learning.oreilly.com/library/view/hands-on-machine-learning/9781492032632/ch09.html#unsupervised_learning_chapter
     
+3. Clustering visualization example
+
+https://www.naftaliharris.com/blog/visualizing-k-means-clustering/
 ---------
 
 *Remember, you have many cheatsheets. Learn to use it.*
