@@ -1,0 +1,7 @@
+Lectura recomendada
+
+https://es.r4ds.hadley.nz/visualizaci%C3%B3n-de-datos.html # lectura 1
+https://learning.oreilly.com/library/view/R+Graphics+Cookbook,+2nd+Edition/9781491978597/app01.html#CHAPTER-GGPLOT2  # lectura 2
+https://es.r4ds.hadley.nz/an%C3%A1lisis-exploratorio-de-datos-eda.html # lectura 3
+https://mauricioanderson.com/curso-r-tidyr/ # lectura 4
+https://rpubs.com/Mentors_Ubiqum/removing_outliers # lectura 5

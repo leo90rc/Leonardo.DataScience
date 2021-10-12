@@ -1,0 +1,19 @@
+<config>
+  
+  <sep>,</sep>
+   <data>
+     
+     <predictors>liver_cancer_number_of_male_deaths.csv, lung_cancer_number_of_male_deaths.csv, prostate_cancer_number_of_male_deaths.csv</predictors>
+     <target>blood_pressure_sbp_men_mmhg.csv</target>
+     
+     <prediction>
+       <country>Spain</country>
+       <year>2000</year>
+     </prediction>
+     
+   </data>
+   
+   <testSize>0.2</testSize>
+   <outputFile>output</outputFile>
+   
+</config>  

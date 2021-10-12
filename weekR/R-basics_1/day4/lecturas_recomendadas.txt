@@ -1,0 +1,5 @@
+Lectura recomendada
+
+http://topepo.github.io/caret/index.html # lectura 1
+https://rpubs.com/Joaquin_AR/383283 # lectura 2 # ejemplo completo de Machine Learning en R
+https://rstudio-pubs-static.s3.amazonaws.com/107279_cf42922302b54c5bb52374029ef279d1.html # lectura 3
